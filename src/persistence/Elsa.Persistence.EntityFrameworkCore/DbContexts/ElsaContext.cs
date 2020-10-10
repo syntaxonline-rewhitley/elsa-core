@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Elsa.Models;
 using Elsa.Persistence.EntityFrameworkCore.CustomSchema;
 using Elsa.Persistence.EntityFrameworkCore.Entities;
+using Elsa.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -28,7 +29,12 @@ namespace Elsa.Persistence.EntityFrameworkCore.DbContexts
         /// <remarks>Protected for following reason: https://github.com/aspnet/EntityFramework.Docs/issues/594</remarks>
         protected ElsaContext(DbContextOptions options) : base(options)
         {
-            serializerSettings = new JsonSerializerSettings().ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            
+            serializerSettings = new JsonSerializerSettings()               
+                .ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            
+            serializerSettings.Converters.Add(new ExceptionConverter());
+
             DbContextCustomSchema = options.GetDbContextCustomSchema();
         }
 
