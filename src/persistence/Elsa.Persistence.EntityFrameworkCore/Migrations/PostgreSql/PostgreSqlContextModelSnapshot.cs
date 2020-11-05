@@ -3,6 +3,7 @@ using System;
 using Elsa.Persistence.EntityFrameworkCore.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Elsa.Persistence.EntityFrameworkCore.Migrations.PostgreSql
@@ -216,7 +217,7 @@ namespace Elsa.Persistence.EntityFrameworkCore.Migrations.PostgreSql
                     b.Property<string>("InstanceId")
                         .HasColumnType("text");
 
-                    b.Property<string>("Scopes")
+                    b.Property<string>("Scope")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("StartedAt")

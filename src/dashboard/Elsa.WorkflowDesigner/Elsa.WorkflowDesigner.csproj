@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RazorLangVersion>3.0</RazorLangVersion>
         <LangVersion>8.0</LangVersion>
         <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Humanizer.Core" Version="2.7.9" />
+        <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     </ItemGroup>
 
     <ItemGroup>

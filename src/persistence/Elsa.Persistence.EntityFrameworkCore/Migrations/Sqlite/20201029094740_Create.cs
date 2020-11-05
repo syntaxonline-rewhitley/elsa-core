@@ -1,18 +1,14 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Sample23.Migrations
+namespace Elsa.Persistence.EntityFrameworkCore.Migrations.Sqlite
 {
-    public partial class InitialCreate : Migration
+    public partial class Create : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "elsa");
-
             migrationBuilder.CreateTable(
-                name: "WorkflowDefinitionVersionEntity",
-                schema: "elsa",
+                name: "WorkflowDefinitionVersions",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -30,12 +26,11 @@ namespace Sample23.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkflowDefinitionVersionEntity", x => x.Id);
+                    table.PrimaryKey("PK_WorkflowDefinitionVersions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkflowInstanceEntity",
-                schema: "elsa",
+                name: "WorkflowInstances",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -50,19 +45,18 @@ namespace Sample23.Migrations
                     FinishedAt = table.Column<DateTime>(nullable: true),
                     FaultedAt = table.Column<DateTime>(nullable: true),
                     AbortedAt = table.Column<DateTime>(nullable: true),
-                    Scopes = table.Column<string>(nullable: true),
+                    Scope = table.Column<string>(nullable: true),
                     Input = table.Column<string>(nullable: true),
                     ExecutionLog = table.Column<string>(nullable: true),
                     Fault = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkflowInstanceEntity", x => x.Id);
+                    table.PrimaryKey("PK_WorkflowInstances", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ActivityDefinitionEntity",
-                schema: "elsa",
+                name: "ActivityDefinitions",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -70,25 +64,26 @@ namespace Sample23.Migrations
                     ActivityId = table.Column<string>(nullable: true),
                     WorkflowDefinitionVersionId = table.Column<int>(nullable: true),
                     Type = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    DisplayName = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
                     Left = table.Column<int>(nullable: false),
                     Top = table.Column<int>(nullable: false),
                     State = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ActivityDefinitionEntity", x => x.Id);
+                    table.PrimaryKey("PK_ActivityDefinitions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ActivityDefinitionEntity_WorkflowDefinitionVersionEntity_WorkflowDefinitionVersionId",
+                        name: "FK_ActivityDefinitions_WorkflowDefinitionVersions_WorkflowDefinitionVersionId",
                         column: x => x.WorkflowDefinitionVersionId,
-                        principalSchema: "elsa",
-                        principalTable: "WorkflowDefinitionVersionEntity",
+                        principalTable: "WorkflowDefinitionVersions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConnectionDefinitionEntity",
-                schema: "elsa",
+                name: "ConnectionDefinitions",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -100,19 +95,17 @@ namespace Sample23.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ConnectionDefinitionEntity", x => x.Id);
+                    table.PrimaryKey("PK_ConnectionDefinitions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ConnectionDefinitionEntity_WorkflowDefinitionVersionEntity_WorkflowDefinitionVersionId",
+                        name: "FK_ConnectionDefinitions_WorkflowDefinitionVersions_WorkflowDefinitionVersionId",
                         column: x => x.WorkflowDefinitionVersionId,
-                        principalSchema: "elsa",
-                        principalTable: "WorkflowDefinitionVersionEntity",
+                        principalTable: "WorkflowDefinitionVersions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ActivityInstanceEntity",
-                schema: "elsa",
+                name: "ActivityInstances",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -125,19 +118,17 @@ namespace Sample23.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ActivityInstanceEntity", x => x.Id);
+                    table.PrimaryKey("PK_ActivityInstances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ActivityInstanceEntity_WorkflowInstanceEntity_WorkflowInstanceId",
+                        name: "FK_ActivityInstances_WorkflowInstances_WorkflowInstanceId",
                         column: x => x.WorkflowInstanceId,
-                        principalSchema: "elsa",
-                        principalTable: "WorkflowInstanceEntity",
+                        principalTable: "WorkflowInstances",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlockingActivityEntity",
-                schema: "elsa",
+                name: "BlockingActivities",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -148,66 +139,55 @@ namespace Sample23.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlockingActivityEntity", x => x.Id);
+                    table.PrimaryKey("PK_BlockingActivities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BlockingActivityEntity_WorkflowInstanceEntity_WorkflowInstanceId",
+                        name: "FK_BlockingActivities_WorkflowInstances_WorkflowInstanceId",
                         column: x => x.WorkflowInstanceId,
-                        principalSchema: "elsa",
-                        principalTable: "WorkflowInstanceEntity",
+                        principalTable: "WorkflowInstances",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActivityDefinitionEntity_WorkflowDefinitionVersionId",
-                schema: "elsa",
-                table: "ActivityDefinitionEntity",
+                name: "IX_ActivityDefinitions_WorkflowDefinitionVersionId",
+                table: "ActivityDefinitions",
                 column: "WorkflowDefinitionVersionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActivityInstanceEntity_WorkflowInstanceId",
-                schema: "elsa",
-                table: "ActivityInstanceEntity",
+                name: "IX_ActivityInstances_WorkflowInstanceId",
+                table: "ActivityInstances",
                 column: "WorkflowInstanceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlockingActivityEntity_WorkflowInstanceId",
-                schema: "elsa",
-                table: "BlockingActivityEntity",
+                name: "IX_BlockingActivities_WorkflowInstanceId",
+                table: "BlockingActivities",
                 column: "WorkflowInstanceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConnectionDefinitionEntity_WorkflowDefinitionVersionId",
-                schema: "elsa",
-                table: "ConnectionDefinitionEntity",
+                name: "IX_ConnectionDefinitions_WorkflowDefinitionVersionId",
+                table: "ConnectionDefinitions",
                 column: "WorkflowDefinitionVersionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ActivityDefinitionEntity",
-                schema: "elsa");
+                name: "ActivityDefinitions");
 
             migrationBuilder.DropTable(
-                name: "ActivityInstanceEntity",
-                schema: "elsa");
+                name: "ActivityInstances");
 
             migrationBuilder.DropTable(
-                name: "BlockingActivityEntity",
-                schema: "elsa");
+                name: "BlockingActivities");
 
             migrationBuilder.DropTable(
-                name: "ConnectionDefinitionEntity",
-                schema: "elsa");
+                name: "ConnectionDefinitions");
 
             migrationBuilder.DropTable(
-                name: "WorkflowInstanceEntity",
-                schema: "elsa");
+                name: "WorkflowInstances");
 
             migrationBuilder.DropTable(
-                name: "WorkflowDefinitionVersionEntity",
-                schema: "elsa");
+                name: "WorkflowDefinitionVersions");
         }
     }
 }
